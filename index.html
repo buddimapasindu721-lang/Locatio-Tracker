@@ -3,87 +3,75 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PASINDU PHONE TRACKER</title>
 
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://cdn.jsdelivr.net/npm/libphonenumber-js@1/bundle/max/libphonenumber-js.min.js"></script>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box}
 body{
- background:#080b12;color:white;
+ margin:0;background:#080a10;color:white;
  font-family:Arial,sans-serif;
- min-height:100vh;
 }
 header{
- padding:20px 15px;
- background:linear-gradient(120deg,#160b12,#101b1a);
- border-bottom:1px solid #ff294c;
+ background:linear-gradient(110deg,#25000c,#101a18);
+ padding:20px 15px;border-bottom:2px solid #ff244b;
+ display:flex;justify-content:space-between;align-items:center;
+}
+.logo{font-weight:bold;color:#45ff9c;font-size:18px}
+.online{font-size:10px;color:#45ff9c}
+.container{max-width:900px;margin:auto;padding:15px}
+h1{font-size:24px;margin:20px 0 5px}
+.sub{color:#9ca8b9;font-size:12px;margin-bottom:20px}
+.section{
+ background:#111923;border:1px solid #293747;
+ border-radius:15px;padding:17px;margin:15px 0;
+}
+.section h3{font-size:15px;color:#45ff9c;margin:0 0 16px}
+input,select{
+ width:100%;padding:14px;margin:7px 0;
+ border:1px solid #344354;border-radius:9px;
+ background:#0b121c;color:white;font-size:15px;
+}
+button{
+ width:100%;padding:14px;border:0;border-radius:10px;
+ font-weight:bold;font-size:14px;cursor:pointer;margin-top:8px;
+}
+.search{background:#ed1742;color:white}
+.gps{background:#163c2c;color:#45ff9c;border:1px solid #45ff9c}
+.refresh{background:#202e42;color:white}
+.result{
+ display:none;background:#0a1517;
+ border:1px solid #2c7954;border-radius:12px;
+ padding:15px;margin-top:15px;
+}
+.row{
  display:flex;justify-content:space-between;
- align-items:center;
+ gap:10px;padding:12px 0;
+ border-bottom:1px solid #293747;font-size:12px;
 }
-.logo{font-size:19px;font-weight:bold;color:#42ff9b}
-.status{font-size:11px;color:#42ff9b}
-.container{max-width:950px;margin:auto;padding:15px}
-.heading{margin:18px 0 15px}
-.heading h1{font-size:23px;color:#fff}
-.heading p{color:#9ca8b8;font-size:12px;margin-top:7px}
-button,select{
- width:100%;padding:14px;border-radius:10px;
- border:1px solid #334354;background:#151e2c;
- color:white;font-size:14px;
-}
-button{cursor:pointer}
-.locate{
- background:linear-gradient(100deg,#a90028,#ff294c);
- border:none;font-weight:bold;margin-bottom:12px;
- box-shadow:0 0 20px #ff294c33;
-}
-.refresh{background:#122a23;border:1px solid #23db85;color:#42ff9b}
+.row span:first-child{color:#a5b2c3}
+.row span:last-child{text-align:right;overflow-wrap:anywhere}
 .grid{
  display:grid;grid-template-columns:repeat(2,1fr);
- gap:12px;margin:15px 0;
+ gap:10px;margin:15px 0;
 }
 .card{
- background:linear-gradient(145deg,#172130,#10151e);
- border:1px solid #283849;border-radius:14px;
- padding:17px;min-height:105px;
+ background:linear-gradient(145deg,#192435,#10151d);
+ border:1px solid #293747;border-radius:13px;padding:16px;
 }
-.card small{color:#9ca8b8;font-size:11px}
-.card h2{font-size:21px;margin-top:12px;color:#42ff9b}
-.card p{font-size:11px;color:#a5afbd;margin-top:6px}
-.section{
- margin-top:17px;padding:17px;
- border:1px solid #293747;border-radius:14px;
- background:#111923;
-}
-.section h3{font-size:15px;margin-bottom:15px;color:#42ff9b}
-.info{
- display:flex;justify-content:space-between;
- gap:12px;padding:12px 0;
- border-bottom:1px solid #26313d;
- font-size:12px;
-}
-.info span:first-child{color:#9ca8b8}
-.info span:last-child{text-align:right;overflow-wrap:anywhere}
+.card small{color:#a4b0bf;font-size:11px}
+.card h2{color:#45ff9c;font-size:20px;margin:12px 0 5px}
+.card p{color:#a4b0bf;font-size:11px;margin:0}
 #map{
- width:100%;height:340px;border-radius:13px;
- margin-top:12px;border:1px solid #394958;
- z-index:1;
+ height:330px;width:100%;border-radius:12px;
+ margin-top:10px;z-index:1;
 }
-#message{
- color:#ffbd63;font-size:12px;
- padding:12px 0;line-height:1.6;
-}
-label{display:block;color:#aab5c5;font-size:12px;margin-bottom:8px}
-select{margin-bottom:12px}
-.footer{text-align:center;color:#657386;font-size:11px;padding:25px}
-.green{color:#42ff9b!important}
-.warning{color:#ffbd63!important}
-@media(min-width:650px){
- .grid{grid-template-columns:repeat(4,1fr)}
-}
+.msg{font-size:12px;color:#ffc56c;line-height:1.6;margin-top:12px}
+.success{color:#45ff9c}
+.footer{text-align:center;color:#697789;padding:25px;font-size:11px}
 </style>
 </head>
 
@@ -91,314 +79,285 @@ select{margin-bottom:12px}
 
 <header>
  <div class="logo">📡 PASINDU TRACKER</div>
- <div class="status">● SYSTEM READY</div>
+ <div class="online">● SYSTEM ONLINE</div>
 </header>
 
 <div class="container">
 
- <div class="heading">
-  <h1>LIVE NETWORK MONITOR</h1>
-  <p>GPS & MOBILE NETWORK INFORMATION SYSTEM</p>
- </div>
+<h1>PHONE TRACKER</h1>
+<div class="sub">PHONE NUMBER LOOKUP & LIVE GPS MONITOR</div>
 
- <button class="locate" onclick="locateMe()">
-  📍 FIND MY CURRENT LOCATION
+<!-- NUMBER SEARCH -->
+<div class="section">
+ <h3>🔎 PHONE NUMBER LOOKUP</h3>
+
+ <label style="font-size:12px;color:#aab5c5">
+ Enter Phone Number
+ </label>
+
+ <input id="phone" type="tel"
+ placeholder="Example: 0771234567 or +94771234567">
+
+ <button class="search" onclick="searchNumber()">
+ 🔍 SEARCH PHONE NUMBER
  </button>
 
- <button class="refresh" onclick="refreshData()">
-  ↻ REFRESH INFORMATION
- </button>
-
- <div id="message">
-  Waiting for GPS permission...
+ <div class="result" id="numberResult">
+  <h3>NUMBER INFORMATION</h3>
+  <div class="row"><span>Phone Number</span><span id="rNumber">--</span></div>
+  <div class="row"><span>Valid Number</span><span id="rValid">--</span></div>
+  <div class="row"><span>Country</span><span id="rCountry">--</span></div>
+  <div class="row"><span>Country Code</span><span id="rCode">--</span></div>
+  <div class="row"><span>Number Type</span><span id="rType">--</span></div>
+  <div class="row"><span>National Format</span><span id="rNational">--</span></div>
+  <div class="row"><span>Network Provider</span><span id="rCarrier">Not available</span></div>
+  <div class="row"><span>Registered Town</span><span id="rTown">Not available</span></div>
+  <div class="msg">
+   Number lookup does not reveal the current GPS location or connected tower.
+  </div>
  </div>
+ <div class="msg" id="numberMessage">
+  Enter a number and press Search.
+ </div>
+</div>
+
+<!-- GPS -->
+<div class="section">
+ <h3>📍 MY LIVE GPS LOCATION</h3>
+ <button class="gps" onclick="getGPS()">📍 FIND MY LOCATION</button>
+ <button class="refresh" onclick="getGPS()">↻ REFRESH GPS</button>
+ <div id="gpsMessage" class="msg">Waiting for GPS permission...</div>
 
  <div class="grid">
-
   <div class="card">
-   <small>📍 GPS LOCATION</small>
+   <small>GPS STATUS</small>
    <h2 id="gpsStatus">--</h2>
-   <p>Location Status</p>
+   <p>Location status</p>
   </div>
-
   <div class="card">
-   <small>📶 NETWORK TYPE</small>
-   <h2 id="networkType">--</h2>
-   <p>Connection Information</p>
-  </div>
-
-  <div class="card">
-   <small>🎯 GPS ACCURACY</small>
+   <small>GPS ACCURACY</small>
    <h2 id="accuracy">--</h2>
-   <p>Estimated GPS accuracy</p>
-  </div>
-
-  <div class="card">
-   <small>🗼 CELL TOWER</small>
-   <h2 id="towerStatus">--</h2>
-   <p>Cell ID availability</p>
-  </div>
-
- </div>
-
- <div class="section">
-  <h3>🗺️ LIVE LOCATION MAP</h3>
-  <div id="map"></div>
- </div>
-
- <div class="section">
-  <h3>📡 NETWORK INFORMATION</h3>
-
-  <label>Mobile Network Provider</label>
-  <select id="provider">
-   <option value="">Select Network</option>
-   <option>Dialog</option>
-   <option>Mobitel</option>
-   <option>Airtel</option>
-   <option>Hutch</option>
-   <option>Other</option>
-  </select>
-
-  <div class="info">
-   <span>Country</span>
-   <span>Sri Lanka</span>
-  </div>
-
-  <div class="info">
-   <span>Network Provider</span>
-   <span id="providerInfo">Not selected</span>
-  </div>
-
-  <div class="info">
-   <span>Connection Type</span>
-   <span id="connection">Unavailable</span>
-  </div>
-
-  <div class="info">
-   <span>Downlink Speed</span>
-   <span id="speed">Unavailable</span>
-  </div>
-
-  <div class="info">
-   <span>Connection Latency</span>
-   <span id="latency">Unavailable</span>
+   <p>Accuracy in meters</p>
   </div>
  </div>
 
- <div class="section">
-  <h3>🗼 CELL TOWER DETAILS</h3>
+ <div id="map"></div>
+</div>
 
-  <div class="info">
-   <span>Cell ID</span>
-   <span class="warning">Not accessible in browser</span>
-  </div>
+<!-- LOCATION DETAILS -->
+<div class="section">
+ <h3>🗺️ LOCATION DETAILS</h3>
+ <div class="row"><span>Latitude</span><span id="lat">--</span></div>
+ <div class="row"><span>Longitude</span><span id="lon">--</span></div>
+ <div class="row"><span>Nearest Town</span><span id="town">--</span></div>
+ <div class="row"><span>Address</span><span id="address">--</span></div>
+ <button class="gps" onclick="googleMaps()">OPEN GOOGLE MAPS</button>
+</div>
 
-  <div class="info">
-   <span>Tower ID</span>
-   <span class="warning">Not accessible in browser</span>
-  </div>
+<!-- NETWORK -->
+<div class="section">
+ <h3>📶 NETWORK INFORMATION</h3>
+ <div class="row"><span>Network Type</span><span id="netType">--</span></div>
+ <div class="row"><span>Connection</span><span id="netConnection">--</span></div>
+ <div class="row"><span>Downlink Speed</span><span id="netSpeed">--</span></div>
+ <div class="row"><span>Latency</span><span id="netLatency">--</span></div>
+</div>
 
-  <div class="info">
-   <span>Signal Strength (dBm)</span>
-   <span>Not available</span>
-  </div>
-
-  <div class="info">
-   <span>Nearest Town</span>
-   <span id="town">Waiting for GPS</span>
-  </div>
-
-  <div class="info">
-   <span>GPS Latitude</span>
-   <span id="latitude">--</span>
-  </div>
-
-  <div class="info">
-   <span>GPS Longitude</span>
-   <span id="longitude">--</span>
-  </div>
-
+<!-- TOWER -->
+<div class="section">
+ <h3>🗼 CELL TOWER INFORMATION</h3>
+ <div class="row"><span>Cell ID</span><span>Requires Android access</span></div>
+ <div class="row"><span>Tower ID</span><span>Requires Android access</span></div>
+ <div class="row"><span>Signal Strength</span><span>Not available in browser</span></div>
+ <div class="row"><span>Nearest Tower Town</span><span>Not available</span></div>
+ <div class="msg">
+ For actual cell tower information, an Android application with
+ supported device permissions and suitable network data is required.
  </div>
-
- <div class="section">
-  <h3>⚙️ LOCATION INFORMATION</h3>
-  <button class="refresh" onclick="openMap()">
-   OPEN LOCATION IN GOOGLE MAPS
-  </button>
-  <p style="font-size:11px;color:#9ca8b8;margin-top:12px">
-   GPS information is collected only after you grant permission.
-  </p>
- </div>
+</div>
 
 </div>
 
 <div class="footer">
  PASINDU PHONE TRACKER © 2026<br>
- LOCATION MONITORING SYSTEM
+ PROFESSIONAL NETWORK MONITOR
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-let map = L.map('map').setView([7.8731,80.7718],7);
+// NUMBER SEARCH
+function searchNumber(){
+
+ const input=document.getElementById('phone').value.trim();
+ const msg=document.getElementById('numberMessage');
+ const result=document.getElementById('numberResult');
+
+ result.style.display='none';
+
+ if(!input){
+  msg.textContent='Please enter a phone number.';
+  return;
+ }
+
+ try{
+  const phone=libphonenumber.parsePhoneNumberFromString(input,'LK');
+
+  if(!phone){
+   msg.textContent='Invalid number format. Try +94771234567.';
+   return;
+  }
+
+  const valid=phone.isValid();
+  const country=phone.country || 'Unknown';
+  const names=new Intl.DisplayNames(['en'],{type:'region'});
+  const countryName=country==='Unknown'?'Unknown':names.of(country);
+
+  document.getElementById('rNumber').textContent=phone.number;
+  document.getElementById('rValid').textContent=valid?'VALID':'INVALID';
+  document.getElementById('rCountry').textContent=countryName;
+  document.getElementById('rCode').textContent='+'+phone.countryCallingCode;
+  document.getElementById('rType').textContent=phone.getType() || 'Unknown';
+  document.getElementById('rNational').textContent=phone.formatNational();
+
+  // Carrier and current town cannot be established from number alone.
+  document.getElementById('rCarrier').textContent='Not available';
+  document.getElementById('rTown').textContent='Not identifiable from number';
+
+  result.style.display='block';
+  msg.textContent=valid?'Number information found.':'Number format checked; number may be invalid.';
+
+ }catch(error){
+  msg.textContent='Number lookup failed. Check the number and internet connection.';
+ }
+}
+
+// MAP
+const map=L.map('map').setView([7.8731,80.7718],7);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
  maxZoom:19,
  attribution:'© OpenStreetMap'
 }).addTo(map);
 
-let marker = null;
-let circle = null;
-let currentLat = null;
-let currentLon = null;
+let marker=null;
+let circle=null;
+let gpsLat=null;
+let gpsLon=null;
 
-function showMessage(message){
- document.getElementById('message').textContent=message;
-}
+function getGPS(){
 
-function getNetwork(){
- const c=navigator.connection ||
-         navigator.mozConnection ||
-         navigator.webkitConnection;
-
- if(!c){
-  document.getElementById('networkType').textContent='N/A';
-  document.getElementById('connection').textContent='Not supported';
-  return;
- }
-
- document.getElementById('networkType').textContent=
-  c.effectiveType || 'Unknown';
-
- document.getElementById('connection').textContent=
-  c.type || c.effectiveType || 'Unknown';
-
- document.getElementById('speed').textContent=
-  c.downlink ? c.downlink+' Mbps' : 'Unavailable';
-
- document.getElementById('latency').textContent=
-  c.rtt ? c.rtt+' ms' : 'Unavailable';
-}
-
-async function getTown(lat,lon){
- document.getElementById('town').textContent='Searching...';
-
- try{
-  const response=await fetch(
-   `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`
-  );
-
-  if(!response.ok) throw new Error('Location lookup failed');
-
-  const data=await response.json();
-  const a=data.address || {};
-
-  const town=
-   a.city || a.town || a.village ||
-   a.suburb || a.county || 'Town unavailable';
-
-  document.getElementById('town').textContent=town;
-
- }catch(error){
-  document.getElementById('town').textContent='Lookup unavailable';
- }
-}
-
-function locateMe(){
  if(!navigator.geolocation){
-  showMessage('Your browser does not support GPS.');
+  document.getElementById('gpsMessage').textContent=
+   'GPS is not supported by this browser.';
   return;
  }
 
- showMessage('Getting your GPS location...');
+ document.getElementById('gpsMessage').textContent=
+  'Getting your GPS location...';
 
- navigator.geolocation.getCurrentPosition(
-  async function(position){
+ navigator.geolocation.getCurrentPosition(async function(pos){
 
-   const lat=position.coords.latitude;
-   const lon=position.coords.longitude;
-   const acc=position.coords.accuracy;
+  gpsLat=pos.coords.latitude;
+  gpsLon=pos.coords.longitude;
 
-   currentLat=lat;
-   currentLon=lon;
+  const accuracy=pos.coords.accuracy;
 
-   document.getElementById('gpsStatus').textContent='ACTIVE';
-   document.getElementById('gpsStatus').className='green';
+  document.getElementById('gpsStatus').textContent='ACTIVE';
+  document.getElementById('accuracy').textContent=
+   Math.round(accuracy)+' m';
 
-   document.getElementById('accuracy').textContent=
-    Math.round(acc)+' m';
+  document.getElementById('lat').textContent=gpsLat.toFixed(6);
+  document.getElementById('lon').textContent=gpsLon.toFixed(6);
 
-   document.getElementById('latitude').textContent=lat.toFixed(6);
-   document.getElementById('longitude').textContent=lon.toFixed(6);
+  if(marker)map.removeLayer(marker);
+  if(circle)map.removeLayer(circle);
 
-   document.getElementById('towerStatus').textContent='N/A';
+  map.setView([gpsLat,gpsLon],16);
 
-   map.setView([lat,lon],16);
+  marker=L.marker([gpsLat,gpsLon]).addTo(map)
+   .bindPopup('YOUR CURRENT LOCATION').openPopup();
 
-   if(marker) map.removeLayer(marker);
-   if(circle) map.removeLayer(circle);
+  circle=L.circle([gpsLat,gpsLon],{
+   radius:accuracy,
+   color:'#00ff91',
+   fillOpacity:0.12
+  }).addTo(map);
 
-   marker=L.marker([lat,lon]).addTo(map)
-    .bindPopup('<b>YOUR CURRENT GPS LOCATION</b>').openPopup();
+  document.getElementById('gpsMessage').textContent=
+   'GPS location detected successfully.';
 
-   circle=L.circle([lat,lon],{
-    radius:acc,
-    color:'#00ff91',
-    fillColor:'#00ff91',
-    fillOpacity:0.12
-   }).addTo(map);
+  try{
+   const response=await fetch(
+    'https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+
+    gpsLat+'&lon='+gpsLon
+   );
 
-   showMessage('GPS location successfully detected.');
+   if(!response.ok)throw new Error();
 
-   await getTown(lat,lon);
-  },
+   const data=await response.json();
+   const a=data.address||{};
 
-  function(error){
-   let msg='Unable to get location.';
+   document.getElementById('town').textContent=
+    a.city||a.town||a.village||a.suburb||a.county||'Unknown';
 
-   if(error.code===1) msg='GPS permission denied. Please allow location access.';
-   if(error.code===2) msg='GPS location unavailable. Check your GPS.';
-   if(error.code===3) msg='GPS request timed out. Try again.';
+   document.getElementById('address').textContent=
+    data.display_name||'Unavailable';
 
-   showMessage(msg);
-   document.getElementById('gpsStatus').textContent='ERROR';
-  },
-
-  {
-   enableHighAccuracy:true,
-   timeout:20000,
-   maximumAge:0
+  }catch(e){
+   document.getElementById('town').textContent='Lookup unavailable';
+   document.getElementById('address').textContent='Lookup unavailable';
   }
- );
+
+ },function(error){
+
+  document.getElementById('gpsStatus').textContent='ERROR';
+
+  document.getElementById('gpsMessage').textContent=
+   error.code===1?'Location permission denied.':
+   error.code===2?'GPS location unavailable.':
+   'GPS timeout. Please try again.';
+
+ },{
+  enableHighAccuracy:true,
+  timeout:20000,
+  maximumAge:0
+ });
 }
 
-function refreshData(){
- getNetwork();
- if(currentLat===null){
-  locateMe();
- }else{
-  locateMe();
- }
-}
-
-function openMap(){
- if(currentLat===null){
-  showMessage('Find your GPS location first.');
+function googleMaps(){
+ if(gpsLat===null){
+  alert('Find your GPS location first.');
   return;
  }
-
  window.open(
-  `https://www.google.com/maps?q=${currentLat},${currentLon}`,
+  'https://www.google.com/maps?q='+gpsLat+','+gpsLon,
   '_blank'
  );
 }
 
-document.getElementById('provider').addEventListener('change',function(){
- document.getElementById('providerInfo').textContent=
-  this.value || 'Not selected';
-});
+// NETWORK
+function networkInfo(){
 
-getNetwork();
+ const c=navigator.connection||
+ navigator.mozConnection||navigator.webkitConnection;
+
+ if(!c)return;
+
+ document.getElementById('netType').textContent=
+  c.effectiveType||'Unknown';
+
+ document.getElementById('netConnection').textContent=
+  c.type||'Unknown';
+
+ document.getElementById('netSpeed').textContent=
+  c.downlink?c.downlink+' Mbps':'Unavailable';
+
+ document.getElementById('netLatency').textContent=
+  c.rtt?c.rtt+' ms':'Unavailable';
+}
+
+networkInfo();
 </script>
 
 </body>
