@@ -1,0 +1,405 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PASINDU PHONE TRACKER</title>
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+ background:#080b12;color:white;
+ font-family:Arial,sans-serif;
+ min-height:100vh;
+}
+header{
+ padding:20px 15px;
+ background:linear-gradient(120deg,#160b12,#101b1a);
+ border-bottom:1px solid #ff294c;
+ display:flex;justify-content:space-between;
+ align-items:center;
+}
+.logo{font-size:19px;font-weight:bold;color:#42ff9b}
+.status{font-size:11px;color:#42ff9b}
+.container{max-width:950px;margin:auto;padding:15px}
+.heading{margin:18px 0 15px}
+.heading h1{font-size:23px;color:#fff}
+.heading p{color:#9ca8b8;font-size:12px;margin-top:7px}
+button,select{
+ width:100%;padding:14px;border-radius:10px;
+ border:1px solid #334354;background:#151e2c;
+ color:white;font-size:14px;
+}
+button{cursor:pointer}
+.locate{
+ background:linear-gradient(100deg,#a90028,#ff294c);
+ border:none;font-weight:bold;margin-bottom:12px;
+ box-shadow:0 0 20px #ff294c33;
+}
+.refresh{background:#122a23;border:1px solid #23db85;color:#42ff9b}
+.grid{
+ display:grid;grid-template-columns:repeat(2,1fr);
+ gap:12px;margin:15px 0;
+}
+.card{
+ background:linear-gradient(145deg,#172130,#10151e);
+ border:1px solid #283849;border-radius:14px;
+ padding:17px;min-height:105px;
+}
+.card small{color:#9ca8b8;font-size:11px}
+.card h2{font-size:21px;margin-top:12px;color:#42ff9b}
+.card p{font-size:11px;color:#a5afbd;margin-top:6px}
+.section{
+ margin-top:17px;padding:17px;
+ border:1px solid #293747;border-radius:14px;
+ background:#111923;
+}
+.section h3{font-size:15px;margin-bottom:15px;color:#42ff9b}
+.info{
+ display:flex;justify-content:space-between;
+ gap:12px;padding:12px 0;
+ border-bottom:1px solid #26313d;
+ font-size:12px;
+}
+.info span:first-child{color:#9ca8b8}
+.info span:last-child{text-align:right;overflow-wrap:anywhere}
+#map{
+ width:100%;height:340px;border-radius:13px;
+ margin-top:12px;border:1px solid #394958;
+ z-index:1;
+}
+#message{
+ color:#ffbd63;font-size:12px;
+ padding:12px 0;line-height:1.6;
+}
+label{display:block;color:#aab5c5;font-size:12px;margin-bottom:8px}
+select{margin-bottom:12px}
+.footer{text-align:center;color:#657386;font-size:11px;padding:25px}
+.green{color:#42ff9b!important}
+.warning{color:#ffbd63!important}
+@media(min-width:650px){
+ .grid{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <div class="logo">📡 PASINDU TRACKER</div>
+ <div class="status">● SYSTEM READY</div>
+</header>
+
+<div class="container">
+
+ <div class="heading">
+  <h1>LIVE NETWORK MONITOR</h1>
+  <p>GPS & MOBILE NETWORK INFORMATION SYSTEM</p>
+ </div>
+
+ <button class="locate" onclick="locateMe()">
+  📍 FIND MY CURRENT LOCATION
+ </button>
+
+ <button class="refresh" onclick="refreshData()">
+  ↻ REFRESH INFORMATION
+ </button>
+
+ <div id="message">
+  Waiting for GPS permission...
+ </div>
+
+ <div class="grid">
+
+  <div class="card">
+   <small>📍 GPS LOCATION</small>
+   <h2 id="gpsStatus">--</h2>
+   <p>Location Status</p>
+  </div>
+
+  <div class="card">
+   <small>📶 NETWORK TYPE</small>
+   <h2 id="networkType">--</h2>
+   <p>Connection Information</p>
+  </div>
+
+  <div class="card">
+   <small>🎯 GPS ACCURACY</small>
+   <h2 id="accuracy">--</h2>
+   <p>Estimated GPS accuracy</p>
+  </div>
+
+  <div class="card">
+   <small>🗼 CELL TOWER</small>
+   <h2 id="towerStatus">--</h2>
+   <p>Cell ID availability</p>
+  </div>
+
+ </div>
+
+ <div class="section">
+  <h3>🗺️ LIVE LOCATION MAP</h3>
+  <div id="map"></div>
+ </div>
+
+ <div class="section">
+  <h3>📡 NETWORK INFORMATION</h3>
+
+  <label>Mobile Network Provider</label>
+  <select id="provider">
+   <option value="">Select Network</option>
+   <option>Dialog</option>
+   <option>Mobitel</option>
+   <option>Airtel</option>
+   <option>Hutch</option>
+   <option>Other</option>
+  </select>
+
+  <div class="info">
+   <span>Country</span>
+   <span>Sri Lanka</span>
+  </div>
+
+  <div class="info">
+   <span>Network Provider</span>
+   <span id="providerInfo">Not selected</span>
+  </div>
+
+  <div class="info">
+   <span>Connection Type</span>
+   <span id="connection">Unavailable</span>
+  </div>
+
+  <div class="info">
+   <span>Downlink Speed</span>
+   <span id="speed">Unavailable</span>
+  </div>
+
+  <div class="info">
+   <span>Connection Latency</span>
+   <span id="latency">Unavailable</span>
+  </div>
+ </div>
+
+ <div class="section">
+  <h3>🗼 CELL TOWER DETAILS</h3>
+
+  <div class="info">
+   <span>Cell ID</span>
+   <span class="warning">Not accessible in browser</span>
+  </div>
+
+  <div class="info">
+   <span>Tower ID</span>
+   <span class="warning">Not accessible in browser</span>
+  </div>
+
+  <div class="info">
+   <span>Signal Strength (dBm)</span>
+   <span>Not available</span>
+  </div>
+
+  <div class="info">
+   <span>Nearest Town</span>
+   <span id="town">Waiting for GPS</span>
+  </div>
+
+  <div class="info">
+   <span>GPS Latitude</span>
+   <span id="latitude">--</span>
+  </div>
+
+  <div class="info">
+   <span>GPS Longitude</span>
+   <span id="longitude">--</span>
+  </div>
+
+ </div>
+
+ <div class="section">
+  <h3>⚙️ LOCATION INFORMATION</h3>
+  <button class="refresh" onclick="openMap()">
+   OPEN LOCATION IN GOOGLE MAPS
+  </button>
+  <p style="font-size:11px;color:#9ca8b8;margin-top:12px">
+   GPS information is collected only after you grant permission.
+  </p>
+ </div>
+
+</div>
+
+<div class="footer">
+ PASINDU PHONE TRACKER © 2026<br>
+ LOCATION MONITORING SYSTEM
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+let map = L.map('map').setView([7.8731,80.7718],7);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+ maxZoom:19,
+ attribution:'© OpenStreetMap'
+}).addTo(map);
+
+let marker = null;
+let circle = null;
+let currentLat = null;
+let currentLon = null;
+
+function showMessage(message){
+ document.getElementById('message').textContent=message;
+}
+
+function getNetwork(){
+ const c=navigator.connection ||
+         navigator.mozConnection ||
+         navigator.webkitConnection;
+
+ if(!c){
+  document.getElementById('networkType').textContent='N/A';
+  document.getElementById('connection').textContent='Not supported';
+  return;
+ }
+
+ document.getElementById('networkType').textContent=
+  c.effectiveType || 'Unknown';
+
+ document.getElementById('connection').textContent=
+  c.type || c.effectiveType || 'Unknown';
+
+ document.getElementById('speed').textContent=
+  c.downlink ? c.downlink+' Mbps' : 'Unavailable';
+
+ document.getElementById('latency').textContent=
+  c.rtt ? c.rtt+' ms' : 'Unavailable';
+}
+
+async function getTown(lat,lon){
+ document.getElementById('town').textContent='Searching...';
+
+ try{
+  const response=await fetch(
+   `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`
+  );
+
+  if(!response.ok) throw new Error('Location lookup failed');
+
+  const data=await response.json();
+  const a=data.address || {};
+
+  const town=
+   a.city || a.town || a.village ||
+   a.suburb || a.county || 'Town unavailable';
+
+  document.getElementById('town').textContent=town;
+
+ }catch(error){
+  document.getElementById('town').textContent='Lookup unavailable';
+ }
+}
+
+function locateMe(){
+ if(!navigator.geolocation){
+  showMessage('Your browser does not support GPS.');
+  return;
+ }
+
+ showMessage('Getting your GPS location...');
+
+ navigator.geolocation.getCurrentPosition(
+  async function(position){
+
+   const lat=position.coords.latitude;
+   const lon=position.coords.longitude;
+   const acc=position.coords.accuracy;
+
+   currentLat=lat;
+   currentLon=lon;
+
+   document.getElementById('gpsStatus').textContent='ACTIVE';
+   document.getElementById('gpsStatus').className='green';
+
+   document.getElementById('accuracy').textContent=
+    Math.round(acc)+' m';
+
+   document.getElementById('latitude').textContent=lat.toFixed(6);
+   document.getElementById('longitude').textContent=lon.toFixed(6);
+
+   document.getElementById('towerStatus').textContent='N/A';
+
+   map.setView([lat,lon],16);
+
+   if(marker) map.removeLayer(marker);
+   if(circle) map.removeLayer(circle);
+
+   marker=L.marker([lat,lon]).addTo(map)
+    .bindPopup('<b>YOUR CURRENT GPS LOCATION</b>').openPopup();
+
+   circle=L.circle([lat,lon],{
+    radius:acc,
+    color:'#00ff91',
+    fillColor:'#00ff91',
+    fillOpacity:0.12
+   }).addTo(map);
+
+   showMessage('GPS location successfully detected.');
+
+   await getTown(lat,lon);
+  },
+
+  function(error){
+   let msg='Unable to get location.';
+
+   if(error.code===1) msg='GPS permission denied. Please allow location access.';
+   if(error.code===2) msg='GPS location unavailable. Check your GPS.';
+   if(error.code===3) msg='GPS request timed out. Try again.';
+
+   showMessage(msg);
+   document.getElementById('gpsStatus').textContent='ERROR';
+  },
+
+  {
+   enableHighAccuracy:true,
+   timeout:20000,
+   maximumAge:0
+  }
+ );
+}
+
+function refreshData(){
+ getNetwork();
+ if(currentLat===null){
+  locateMe();
+ }else{
+  locateMe();
+ }
+}
+
+function openMap(){
+ if(currentLat===null){
+  showMessage('Find your GPS location first.');
+  return;
+ }
+
+ window.open(
+  `https://www.google.com/maps?q=${currentLat},${currentLon}`,
+  '_blank'
+ );
+}
+
+document.getElementById('provider').addEventListener('change',function(){
+ document.getElementById('providerInfo').textContent=
+  this.value || 'Not selected';
+});
+
+getNetwork();
+</script>
+
+</body>
+</html>
